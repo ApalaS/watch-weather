@@ -42,14 +42,17 @@
         </div>
         <hr />
         <div class="imgChange">
-          <button class="button is-primary is-inverted is-outlined" @click="changeImg;">
+          <button
+            class="button is-primary is-inverted is-outlined"
+            @click="changeImg"
+          >
             Change Image
           </button>
         </div>
       </div>
       <div class="column is-one-quarters">
         <div class="outermost mt-2 ">
-          <p class="outside mb-2">City</p>
+          <p class="outside mb-2">{{ location }}</p>
           <p class="inside">
             <span class="inside2">Latitude:</span>
             <span class="inside3">{{ lat.toFixed(4) }}</span>
@@ -106,7 +109,9 @@
           >~
           <a href="https://www.linkedin.com/in/apala-singh-a23818202/">
             Github </a
-          >~ <strong> mail at: </strong>apalasingh2001@gmail.com.
+          >~ <strong> mail at: </strong
+          ><a href="mailto:apalasingh2001@gmail.com">apalasingh2001@gmail.com</a
+          >.
         </p>
       </div>
     </footer>
@@ -159,13 +164,12 @@ export default {
           `https://api.openweathermap.org/data/2.5/onecall?lat=${this.lat}&lon=${this.lon}&units=metric&appid=006de37c33466228906e42303c5cf9da`
         )
         .then((response) => {
-          // console.log(response);
+          console.log(response);
           this.alert = response.data.alerts?.event;
           this.sunrise = response.data.current.sunrise;
           this.sunset = response.data.current.sunset;
           this.temp = response.data.current.temp;
           this.feelsLike = response.data.current.feels_like;
-          this.time = response.data.current.dt;
           this.wind = response.data.current.wind_speed;
           this.humidity = response.data.current.humidity;
           this.pressure = response.data.current.pressure;
@@ -175,7 +179,38 @@ export default {
           this.minTemperature = response.data.daily[0].temp.min;
           this.maxTemperature = response.data.daily[0].temp.max;
           // console.log(this.alert);
+          axios
+            .get(
+              `https://api.unsplash.com/photos/random?client_id=4j3NCVWHWBF6uM9LlfrF_NQvO8J5AFOpvHd9lT6ZnzI&query=${this.weather}-dark`
+            )
+            .then((response) => {
+              this.image = response.data.urls.regular;
+              this.$refs["main"].style.background = `url(${this.image})`;
+              this.$refs["main"].style.backgroundSize = "cover";
+              this.$refs["main"].style.backgroundRepeat = "no-repeat";
+              //console.log(response.data);
+            });
+          let x = new Date();
+          this.time =
+            x.getHours() +
+            ":" +
+            (x.getMinutes() < 10 ? `0${x.getMinutes()}` : x.getMinutes());
+          this.date = x.getDate() + "/" + x.getMonth() + "/" + x.getYear();
         });
+
+      axios
+        .get(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${this.lat}&lon=${this.lon}&units=metric&appid=006de37c33466228906e42303c5cf9da`
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.location = response.data.name;
+        });
+    });
+  },
+
+  methods: {
+    changeImg() {
       axios
         .get(
           `https://api.unsplash.com/photos/random?client_id=4j3NCVWHWBF6uM9LlfrF_NQvO8J5AFOpvHd9lT6ZnzI&query=${this.weather}-dark`
@@ -183,20 +218,11 @@ export default {
         .then((response) => {
           this.image = response.data.urls.regular;
           this.$refs["main"].style.background = `url(${this.image})`;
+          this.$refs["main"].style.backgroundSize = "cover";
+          this.$refs["main"].style.backgroundRepeat = "no-repeat";
           //console.log(response.data);
         });
-      axios
-        .get(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${this.lat}&lon=${this.lon}&units=metric&appid=006de37c33466228906e42303c5cf9da`
-        )
-        .then((response) => {
-          console.log(response.data);
-        });
-    });
-  },
-
-  methods: {
-    changeImg(){}
+    },
   },
 };
 </script>
@@ -219,6 +245,7 @@ export default {
   width: 100%;
   padding: 2rem;
 }
+
 .showBar {
   display: flex;
   flex-direction: row;
