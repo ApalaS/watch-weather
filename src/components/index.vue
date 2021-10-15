@@ -231,6 +231,11 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
 
+#hi{
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+}
 .myTitle {
   font-family: "Bebas Neue", cursive;
   color: #fff;
